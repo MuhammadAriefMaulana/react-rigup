@@ -1,0 +1,167 @@
+.navContainer{
+    @include flex(row, center, center);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    transition: all 0.4s ease;
+    .wrapper{
+        width: 100%;
+        max-width: 1920px;
+        height: 7vh;
+        display: grid;
+        grid-template-columns: 2fr 1fr 2fr;
+        transition: all 0.4s ease;
+        ul{
+            @include flex(row, flex-start, center);
+            list-style: none;
+            padding-left: 5%;
+            li{
+                height: 100%;
+                padding: 0 5%;
+                @include flex(row, flex-start, center);
+                a{
+                    transition: all 0.4s ease;
+                    color: $light;
+                    font-size: 1.6rem;
+                    text-transform: uppercase;
+                    font-weight: 400;
+                    transition: all 0.4s ease;
+                }
+                &:hover{
+                    a{
+                        letter-spacing: 0.5rem;
+                    }
+                }
+            }
+        }
+        .logoContainer{
+            height: 100%;
+            width: 100%;
+            @include flex(row, center, center);
+            position: relative;
+            p{
+                transition: all 0.4s ease;
+                font-family: mistral;
+                font-size: 4.2rem;
+                color: $light;
+            }
+            &::after{
+                content: '';
+                border-bottom: 1px solid $lightgrey;
+                width: 150%;
+                position: absolute;
+                bottom: 0;
+            }
+        }
+        .rightContainer{
+            height: 100%;
+            @include flex(row, flex-end, center);
+            padding-right: 10%;
+            .rightWrapper{
+                position: relative;
+                height: 100%;
+                @include flex(row, center, center);
+                .btnLogin{
+                    font-weight: 600;
+                    color: $light;
+                    border: 1px solid $lightgrey;
+                    font-size: 1.4rem;
+                    padding: 8px 30px;
+                }
+                .navIconContainer{
+                    height: 100%;
+                    @include flex(row, center, center);
+                    transform: translateY(2px);
+                }
+                .dropdownMenu{
+                    button{
+                        @include flex(row, center, center);
+                        margin-top: 2px;
+                        color: $light;
+                        margin-left: 15px;
+                        .username{
+                            font-size: 1.4rem;
+                            font-weight: 300;
+                            padding: 2px 10px 0 0;
+                        }
+                    }
+                    div{
+                        border-radius: 0px;
+                        ul{
+                            @include flex(column, center, flex-start);
+                            background-color: $dark;
+                            padding: 0;
+                            li{
+                                width: 100%;
+                                color: $light;
+                                font-size: 1.4rem;
+                                font-weight: 300;
+                                padding: 15px 30px 15px 15px;
+                                &:hover{
+                                    color: $dark;
+                                    background-color: $light;
+                                }
+                                svg{
+                                    margin-right: 15px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.navContainer.change{
+    background-color: rgba(255, 255, 255, 0.7);
+    .wrapper{
+        height: 5vh;
+        ul{
+            li{
+                a{
+                    color: $dark;
+                    padding-bottom: 1px;
+                }
+            }
+        }
+        .logoContainer{
+            p{
+                color: $dark;
+                font-size: 3.6rem;
+            }
+        }
+        .rightContainer{
+            .rightWrapper{
+                .btnLogin{
+                    color: $dark;
+                    border: 1px solid $darkgrey;
+                    padding: 5px 30px;
+                }
+                .dropdownMenu{
+                    button{
+                        margin-top: 0;
+                        color: $dark;
+                        .username{
+                            padding: 0 10px 0 0;
+                        }
+                    }
+                    div{
+                        div{
+                            ul{
+                                background-color: $light;
+                                li{
+                                    color: $dark;
+                                    &:hover{
+                                        color: $light;
+                                        background-color: $dark;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

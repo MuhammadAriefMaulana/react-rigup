@@ -1,0 +1,75 @@
+.registerContainer{
+    background-color: $dark;
+    width: 100%;
+    min-height: 100vh;
+    @include flex(row, center, center);
+    .title{
+        position: absolute;
+        right: 0;
+        writing-mode: vertical-lr;
+        text-align: center;
+        color: $accent1;
+        font-size: 16vh;
+        height: 100%;
+    }
+    .formWrapper{
+        position: relative;
+        @include flex(row, center, center);
+        .formInput{
+            width: 500px;
+            fieldset{
+                margin-top: 15px;
+                legend{
+                    color: $lightgrey;
+                }
+            }
+            div{
+                label{
+                    color: $lightgrey;
+                    font-weight: 300;
+                    font-size: 1.4rem;
+                }
+                div{
+                    &::before{
+                        border-color:$accent1;
+                    }
+                    &::after{
+                        border-color: $accent1;
+                    }
+                    input{
+                        color: $light;
+                    }
+                }
+                .MuiFormHelperText-root{
+                    color: $lightgrey;
+                }
+            }
+            .btnContainer{
+                margin-top: 15px;
+                @include flex(row, space-between, center);
+                button{
+                    border-color: $accent1;
+                    color: $accent1;
+                    font-weight: 300;
+                    font-size: 1.4rem;
+                    width: 120px;
+                    height: 40px;
+                    &:hover{
+                        background-color: $accent1;
+                        color: $light;
+                      }
+                }
+            }
+        }
+        .textCheckValid{
+            height: 145px;
+            position: absolute;
+            bottom: 60px;
+            left: -40%;
+            color: $lightgrey;
+            font-size: 1.4rem;
+            text-align: right;
+            @include flex(column, space-between, flex-end);
+        }
+    }
+}

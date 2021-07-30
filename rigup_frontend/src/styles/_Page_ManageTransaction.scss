@@ -1,0 +1,31 @@
+.manageTransactionContainer{
+    background-color: $light;
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    @include flex(row, center, flex-start);
+    flex-wrap: wrap;
+    .manageTransactionWrapper{
+        padding: 25px 50px;
+        .manageTransactionHeader{
+            @include flex(row, space-between, center);
+            height: 70px;
+            .manageTransactionText{
+                @include flex(row, center, center);
+                h2{
+                    padding-right: 15px;
+                }
+            }
+            .manageTransactionOption{
+                @include flex(row, center, flex-end);
+            }
+        }
+        table, tr, th{
+            padding: 4px;
+        }
+        table, tr, td{
+            padding: 2px 5px;
+            text-align: center;
+        }
+    }
+}

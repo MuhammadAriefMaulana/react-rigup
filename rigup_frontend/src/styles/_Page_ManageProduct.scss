@@ -1,0 +1,22 @@
+.manageProductContainer{
+    background-color: $light;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 25px;
+    padding-bottom: 50px;
+    @include flex(row, center, flex-start);
+    .manageProductWrapper{
+        width: 100%;
+        .productHeader{
+            @include flex(row, space-around, center);
+            padding-bottom: 40px;
+            ul{
+                @include flex(row, center, center);
+                font-size: 1.6rem;
+            }
+        }
+        table, tr, td{
+            padding: 4px;
+        }
+    }
+}
