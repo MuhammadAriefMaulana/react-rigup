@@ -1,0 +1,4 @@
+[server]
+#host1 ansible_host=35.215.69.204
+#host2 ansible_host=35.215.96.234
+mariefm1 ansible_host=35.215.109.34

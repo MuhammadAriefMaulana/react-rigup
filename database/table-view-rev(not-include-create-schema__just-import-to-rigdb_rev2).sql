@@ -18,7 +18,7 @@
 --
 -- Temporary view structure for view `category_leaf`
 --
-
+USE `rigdb_rev2`;
 DROP TABLE IF EXISTS `category_leaf`;
 /*!50001 DROP VIEW IF EXISTS `category_leaf`*/;
 SET @saved_cs_client     = @@character_set_client;

@@ -1,0 +1,152 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rigup-frontend
+  namespace: mariefm  #ganti namespace masing2
+spec:
+  type: LoadBalancer
+  selector:
+    app: rigup
+    tier: frontend
+  ports:
+  - port: 3000
+    targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: mariefm #ganti namespace masing2
+spec:
+  selector:
+    app: rigup
+    tier: backend
+  ports:
+  - port: 2000
+    targetPort: 2000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: mariefm #ganti namespace masing2
+spec:
+  selector:
+    app: rigup
+    tier: db
+  ports:
+  - port: 3306
+    targetPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rigup
+    tier: frontend
+  name: rigup-frontend-deployment
+  namespace: mariefm  #ganti namespace masing2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rigup
+      tier: frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rigup
+        tier: frontend
+    spec:
+      containers:
+      - image: muhammadariefmaulana/rigup_frontend:0.0.3
+        imagePullPolicy: IfNotPresent
+        name: frontend
+        env:
+        - name: API_URL
+          value: http://$(BACKEND_SERVICE_HOST):2000
+        - name: NODE_ENV
+          value: production
+        - name: PUBLIC_URL
+          value: http://$(RIGUP_FRONTEND_SERVICE_HOST):$(RIGUP_FRONTEND_SERVICE_PORT)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rigup
+    tier: backend
+  name: rigup-backend-deployment
+  namespace: mariefm  #ganti namespace masing2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rigup
+      tier: backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rigup
+        tier: backend
+    spec:
+      containers:
+      - image: muhammadariefmaulana/rigup_backend:0.0.1
+        imagePullPolicy: IfNotPresent
+        name: backend
+        env:
+        - name: HOST
+          value: $(DATABASE_SERVICE_HOST)
+        - name: MYSQL_PASSWORD
+          value: secretadmin
+        - name: PORT
+          value: "2000"
+        - name: SECRET_KEY
+          value: asdf1234zxc.
+        - name: FRONTEND_URL
+          value: http://$(RIGUP_FRONTEND_SERVICE_HOST):80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rigup
+    tier: db
+  name: rigup-db-deployment
+  namespace: mariefm  #ganti namespace masing2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rigup
+      tier: db
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rigup
+        tier: db
+    spec:
+      containers:
+      - image: muhammadariefmaulana/rigup_database:0.0.1
+        imagePullPolicy: IfNotPresent
+        name: database
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: secretadmin
+        - name: MYSQL_DATABASE
+          value: rigdb_rev2
