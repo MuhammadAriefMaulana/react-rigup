@@ -21,16 +21,16 @@ pipeline {
             }
         }
         // stage 3
-        stage('Build Project Front End') {
-            steps {
-                dir('./rigup_frontend') {
-                    sh 'npm run build'
-                }
-            }
-        }
+        // stage('Build Project Front End') {
+        //     steps {
+        //         dir('./rigup_frontend') {
+        //             sh 'npm run build'
+        //         }
+        //     }
+        // }
         
         // stage 4
-        stage('Build Docker Images') {
+        stage('Build Docker Images - Front End') {
             steps {
                 dir('./rigup_frontend') {
                     script {
