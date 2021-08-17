@@ -21,19 +21,24 @@ pipeline {
             }
         }
         // stage 3
-        stage('Build Project') {
+        stage('Build Project Front End') {
             steps {
-                sh 'npm run build'
+                dir('./rigup_frontend') {
+                    sh 'npm run build'
+                }
             }
         }
+        
         // stage 4
-        // stage('Build Docker Images') {
-        //     steps {
-        //         script {
-        //             app=docker.build("muhammadariefmaulana/rigup") //change
-        //         }
-        //     }
-        // }
+        stage('Build Docker Images') {
+            steps {
+                dir('./rigup_frontend') {
+                    script {
+                        app=docker.build("muhammadariefmaulana/rigup_frontend") //change
+                    }
+                }
+            }
+        }
         // // stage 5
         // stage('Test Docker Images') {
         //     steps {

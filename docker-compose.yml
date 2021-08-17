@@ -68,30 +68,6 @@ services:
     depends_on:
       - backend
 
-  # backend:
-  #   depends_on:
-  #     - rigup_db
-  #   image: rigup_backend:latest
-  #   restart: always
-  #   ports:
-  #     - '2000:2000'
-  #   restart: always
-  #   networks:
-  #     - network-3
-
-  # frontend:
-  #   depends_on:
-  #     - rigup_be
-  #   image: rigup_frontend:latest
-  #   restart: always
-  #   ports:
-  #     - '3000:80'
-  #   restart: always
-  #   volumes:
-  #     - ./rigup_frontend:/app
-  #   networks:
-  #     - network-3
-
 # Networks to be created to facilitate communication between containers
 networks:
   network-3:
