@@ -55,7 +55,9 @@ pipeline {
         // // stage 6
         stage('Clean Up Docker Test') {
             steps {
-                sh 'docker stop muhammadariefmaulana/rigup_frontend'
+                // sh 'docker stop muhammadariefmaulana/rigup_frontend'
+                sh 'docker stop $(docker ps -q --filter ancestor=$registryFrontEnd ) || true'
+                sh 'docker stop testImages || true'
             }
         }
         // // stage 7
