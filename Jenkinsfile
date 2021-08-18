@@ -13,7 +13,7 @@ pipeline {
     }
 
     stages {
-        // stage 1
+        /*// stage 1
         stage('Install Dependencies React Project') {
             steps {
                 echo 'Start installing dependencies react project'
@@ -95,7 +95,7 @@ pipeline {
                 stage('Front End') {
                     steps {
                         script {
-                            docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
+                            docker.withRegistry('', registryCredential) {
                                 dockerImageFE.push()
                             }
                         }
@@ -104,7 +104,7 @@ pipeline {
                 stage('Back End') {
                     steps {
                         script {
-                            docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
+                            docker.withRegistry('', registryCredential) {
                                 dockerImageBE.push()
                             }
                         }
@@ -113,7 +113,7 @@ pipeline {
                 stage('Database') {
                     steps {
                         script {
-                            docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
+                            docker.withRegistry('', registryCredential) {
                                 dockerImageDB.push()
                             }
                         }
@@ -126,7 +126,7 @@ pipeline {
             steps {
                 sh 'docker rmi $registryFrontEnd && docker rmi $registryBackEnd && docker rmi $registryDatabase'
             }
-        }
+        } */
         // stage 9
         // stage('Apply Kubernetes File') {
         //     steps {
@@ -137,6 +137,16 @@ pipeline {
         //         }
         //     }
         // }
+        // stage 9
+        stage('Apply Kubernetes File') {
+            steps {
+                // sh "chmod +x changeTag.sh"
+                // sh "./changeTag.sh ${DOCKER_TAG}"
+                withKubeConfig([credentialsId: 'kubeconfig']) {
+                    sh 'kubectl apply -f deployment.yaml' 
+                }
+            }
+        }
     }
 }
 

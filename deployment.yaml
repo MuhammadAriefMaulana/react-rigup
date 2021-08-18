@@ -64,7 +64,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: muhammadariefmaulana/rigup_frontend:0.0.3
+      - image: muhammadariefmaulana/rigup_frontend:latest
         imagePullPolicy: IfNotPresent
         name: frontend
         env:
@@ -101,7 +101,7 @@ spec:
         tier: backend
     spec:
       containers:
-      - image: muhammadariefmaulana/rigup_backend:0.0.1
+      - image: muhammadariefmaulana/rigup_backend:latest
         imagePullPolicy: IfNotPresent
         name: backend
         env:
@@ -142,7 +142,7 @@ spec:
         tier: db
     spec:
       containers:
-      - image: muhammadariefmaulana/rigup_database:0.0.1
+      - image: muhammadariefmaulana/rigup_database:latest
         imagePullPolicy: IfNotPresent
         name: database
         env:
