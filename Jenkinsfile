@@ -7,7 +7,9 @@ pipeline {
         registryBackEnd = "muhammadariefmaulana/rigup_backend"
         registryDatabase = "muhammadariefmaulana/rigup_database"
         registryCredential = 'dockerhub'  //dockerhub --> add credential di jenkins terlebih dahulu dengan ID dockerhub
-        dockerImage = ''
+        dockerImageFE = ''
+        dockerImageBE = ''
+        dockerImageDB = ''
     }
 
     stages {
@@ -19,7 +21,7 @@ pipeline {
             }
         }
         // stage 2
-        stage('Test Project') {
+        stage('Check Jenkins Workspace') {
             steps {
                 sh "chmod +x -R ${env.WORKSPACE}"
                 sh './jenkins/scripts/test.sh'
@@ -35,20 +37,47 @@ pipeline {
         // }
         
         // stage 4
-        stage('Build Docker Images - Front End') {
-            steps {
-                dir('./rigup_frontend') {
-                    script {
-                        // dockerImage=docker.build("muhammadariefmaulana/rigup_frontend:$BUILD_NUMBER") //change
-                        dockerImage=docker.build(registryFrontEnd)
+        stage('Build Docker Images') {
+            parallel {
+                stage('Front End') {
+                    steps {
+                        dir('./rigup_frontend') {
+                            script {
+                                // dockerImage=docker.build("$registryBackEnd:$BUILD_NUMBER") //change
+                                dockerImageFE=docker.build(registryFrontEnd)
+                            }
+                        }
+                    }
+                }
+                stage('Back End') {
+                    steps {
+                        dir('./rigup_backend') {
+                            script {
+                                // dockerImage=docker.build("$registryBackEnd:$BUILD_NUMBER") //change
+                                dockerImageBE=docker.build(registryBackEnd)
+                            }
+                        }
+                    }
+                }
+                stage('Database') {
+                    steps {
+                        dir('./database') {
+                            script {
+                                // dockerImage=docker.build("$registryBackEnd:$BUILD_NUMBER") //change
+                                dockerImageDB=docker.build(registryDatabase)
+                            }
+                        }
                     }
                 }
             }
         }
+        
         // stage 5
         stage('Test Docker Images') {
             steps {
-                sh 'docker run -d --rm --name testImages -p 8081:80 muhammadariefmaulana/rigup_frontend'
+                sh 'docker run -d --rm --name frontend -p 8081:80 $registryFrontEnd'
+                sh 'docker run -d --rm --name backend -p 2000:2000 $registryBackEnd'
+                sh 'docker run -d --rm --name database -p 3306:3306 $registryDatabase'
                 input message: "Done Test Docker Image. Continue?"
             }
         }
@@ -56,29 +85,49 @@ pipeline {
         stage('Clean Up Docker Test') {
             steps {
                 // sh 'docker stop muhammadariefmaulana/rigup_frontend'
-                sh 'docker stop $(docker ps -q --filter ancestor=$registryFrontEnd ) || true'
-                sh 'docker stop testImages || true'
+                // sh 'docker stop $(docker ps -q --filter ancestor=$registryFrontEnd ) || true'
+                sh 'docker stop frontend || true && docker stop backend || true && docker stop database || true'
             }
         }
-        // // stage 7
+        // stage 7
         stage('Push Docker Images to Registry') {
-            steps {
-                script {
-                    docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
-                        // dockerImage.push("${DOCKER_TAG}")
-                        dockerImage.push()
-                        // dockerImage.push("latest")
+            parallel {
+                stage('Front End') {
+                    steps {
+                        script {
+                            docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
+                                dockerImageFE.push()
+                            }
+                        }
                     }
                 }
-            }
+                stage('Back End') {
+                    steps {
+                        script {
+                            docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
+                                dockerImageBE.push()
+                            }
+                        }
+                    }
+                }
+                stage('Database') {
+                    steps {
+                        script {
+                            docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
+                                dockerImageDB.push()
+                            }
+                        }
+                    }
+                }
+            }           
         }        
-        // // stage 8
+        // stage 8
         stage('Clean Up Images') {
             steps {
-                sh 'docker rmi $registryFrontEnd'
+                sh 'docker rmi $registryFrontEnd && docker rmi $registryBackEnd && docker rmi $registryDatabase'
             }
         }
-        // // stage 9
+        // stage 9
         // stage('Apply Kubernetes File') {
         //     steps {
         //         sh "chmod +x changeTag.sh"
