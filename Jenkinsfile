@@ -3,6 +3,11 @@ pipeline {
     environment {
         CI = 'true'
         DOCKER_TAG = getDockerTag()
+        registryFrontEnd = "muhammadariefmaulana/rigup_frontend"
+        registryBackEnd = "muhammadariefmaulana/rigup_backend"
+        registryDatabase = "muhammadariefmaulana/rigup_database"
+        registryCredential = 'dockerhub'  //dockerhub --> add credential di jenkins terlebih dahulu dengan ID dockerhub
+        dockerImage = ''
     }
 
     stages {
@@ -34,40 +39,43 @@ pipeline {
             steps {
                 dir('./rigup_frontend') {
                     script {
-                        app=docker.build("muhammadariefmaulana/rigup_frontend") //change
+                        // dockerImage=docker.build("muhammadariefmaulana/rigup_frontend:$BUILD_NUMBER") //change
+                        dockerImage=docker.build(registryFrontEnd)
                     }
                 }
             }
         }
-        // // stage 5
-        // stage('Test Docker Images') {
-        //     steps {
-        //         sh 'docker run -d --rm --name testImages -p 8081:80 muhammadariefmaulana/rigup'
-        //     }
-        // }
+        // stage 5
+        stage('Test Docker Images') {
+            steps {
+                sh 'docker run -d --rm --name testImages -p 8081:80 muhammadariefmaulana/rigup_frontend'
+                input message: "Done Test Docker Image. Continue?"
+            }
+        }
         // // stage 6
-        // stage('Push Docker Images to Registry') {
-        //     steps {
-        //         sh 'docker stop muhammadariefmaulana/rigup'
-        //     }
-        // }
+        stage('Clean Up Docker Test') {
+            steps {
+                sh 'docker stop muhammadariefmaulana/rigup_frontend'
+            }
+        }
         // // stage 7
-        // stage('Clean Up Docker Test') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry('http://registry.hub.docker.com', 'dockerhub') {
-        //                 app.push("${DOCKER_TAG}")
-        //                 app.push("latest")
-        //             }
-        //         }
-        //     }
-        // }        
+        stage('Push Docker Images to Registry') {
+            steps {
+                script {
+                    docker.withRegistry('http://registry.hub.docker.com', registryCredential) {
+                        // dockerImage.push("${DOCKER_TAG}")
+                        dockerImage.push()
+                        // dockerImage.push("latest")
+                    }
+                }
+            }
+        }        
         // // stage 8
-        // stage('Clean Up Images') {
-        //     steps {
-        //         sh 'docker rmi muhammadariefmaulana/rigup'
-        //     }
-        // }
+        stage('Clean Up Images') {
+            steps {
+                sh 'docker rmi $registryFrontEnd'
+            }
+        }
         // // stage 9
         // stage('Apply Kubernetes File') {
         //     steps {
