@@ -13,7 +13,7 @@ pipeline {
     }
 
     stages {
-        /*// stage 1
+        // stage 1
         stage('Install Dependencies React Project') {
             steps {
                 echo 'Start installing dependencies react project'
@@ -126,7 +126,7 @@ pipeline {
             steps {
                 sh 'docker rmi $registryFrontEnd && docker rmi $registryBackEnd && docker rmi $registryDatabase'
             }
-        } */
+        }
         // stage 9
         // stage('Apply Kubernetes File') {
         //     steps {
@@ -143,6 +143,9 @@ pipeline {
                 // sh "chmod +x changeTag.sh"
                 // sh "./changeTag.sh ${DOCKER_TAG}"
                 withKubeConfig([credentialsId: 'kubeconfig']) {
+                    // sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'  
+                    // sh 'chmod u+x ./kubectl'  
+                    sh 'echo $KUBECONFIG'
                     sh 'kubectl apply -f deployment.yaml' 
                 }
             }
