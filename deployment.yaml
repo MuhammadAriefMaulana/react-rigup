@@ -154,7 +154,7 @@ spec:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  namespace: default
+  namespace: mariefm
 spec:
   maxReplicas: 10
   minReplicas: 1
