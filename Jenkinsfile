@@ -161,7 +161,7 @@ pipeline {
 
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
                     sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
-                    sh 'gcloud container clusters get-credentials $KUBE_CLUSTER --zone $KUBE_ZONE --project $PROJECT_ID"'
+                    sh 'gcloud container clusters get-credentials KUBE_CLUSTER --zone KUBE_ZONE --project PROJECT_ID"'
                     sh 'echo $KUBECONFIG'
                     sh 'kubectl apply -f deployment.yaml'
                 }
