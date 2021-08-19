@@ -19,7 +19,7 @@ pipeline {
     }
 
     stages {
-        // stage 1
+        /*// stage 1
         stage('Install Dependencies React Project') {
             steps {
                 echo 'Start installing dependencies react project'
@@ -142,7 +142,7 @@ pipeline {
         //             sh 'kubectl apply -f #file_deployment_kubernetes#' 
         //         }
         //     }
-        // }
+        // }*/
         // stage 9
         stage('Apply Kubernetes File') {
             steps {
@@ -154,10 +154,17 @@ pipeline {
                 //     sh 'echo $KUBECONFIG'
                 //     sh 'kubectl apply -f deployment.yaml' 
                 // }
-                sh 'gcloud auth activate-service-account $SA_ACCOUNT --key-file=$KEY_FILE'
-                sh 'gcloud container clusters get-credentials $KUBE_CLUSTER --zone $KUBE_ZONE --project $PROJECT_ID'
-                sh 'echo $KUBECONFIG'
-                sh 'kubectl apply -f deployment.yaml' 
+                // sh 'gcloud auth activate-service-account $SA_ACCOUNT --key-file=$KEY_FILE'
+                // sh 'gcloud container clusters get-credentials $KUBE_CLUSTER --zone $KUBE_ZONE --project $PROJECT_ID'
+                // sh 'echo $KUBECONFIG'
+                // sh 'kubectl apply -f deployment.yaml' 
+
+                withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
+                    sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
+                    sh 'gcloud container clusters get-credentials $KUBE_CLUSTER --zone $KUBE_ZONE --project $PROJECT_ID"'
+                    sh 'echo $KUBECONFIG'
+                    sh 'kubectl apply -f deployment.yaml'
+                }
             }
         }
     }
