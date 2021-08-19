@@ -150,3 +150,47 @@ spec:
           value: secretadmin
         - name: MYSQL_DATABASE
           value: rigdb_rev2
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  namespace: default
+spec:
+  maxReplicas: 10
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: echoserver-initial
+  targetCPUUtilizationPercentage: 60
+status:
+  currentCPUUtilizationPercentage: 1
+  currentReplicas: 3
+  desiredReplicas: 3
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-mariefm-ingress
+  namespace: mariefm
+  labels:
+    name: frontend-mariefm-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+  - hosts:
+      - devops7.telkomsel.com
+    secretName: ingress-cert
+  rules:
+  - host: devops7.telkomsel.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
+---

@@ -10,6 +10,12 @@ pipeline {
         dockerImageFE = ''
         dockerImageBE = ''
         dockerImageDB = ''
+        SA_ACCOUNT = 'devops-telkomsel-7-new@group7-322208.iam.gserviceaccount.com' //sesuaikan dengan email service account yang digunakan
+        KEY_FILE = 'devops-telkomsel-7-new-SA' //add di credential
+        KUBE_CLUSTER = 'mariefm'
+        KUBE_ZONE = 'us-west2-a'
+        PROJECT_ID = 'group7-322208'
+
     }
 
     stages {
@@ -142,12 +148,16 @@ pipeline {
             steps {
                 // sh "chmod +x changeTag.sh"
                 // sh "./changeTag.sh ${DOCKER_TAG}"
-                withKubeConfig([credentialsId: 'kubeconfig']) {
-                    // sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'  
-                    // sh 'chmod u+x ./kubectl'  
-                    sh 'echo $KUBECONFIG'
-                    sh 'kubectl apply -f deployment.yaml' 
-                }
+                // withKubeConfig([credentialsId: 'kubeconfig']) {
+                //     // sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'  
+                //     // sh 'chmod u+x ./kubectl'  
+                //     sh 'echo $KUBECONFIG'
+                //     sh 'kubectl apply -f deployment.yaml' 
+                // }
+                sh 'gcloud auth activate-service-account $SA_ACCOUNT --key-file=$KEY_FILE'
+                sh 'gcloud container clusters get-credentials $KUBE_CLUSTER --zone $KUBE_ZONE --project $PROJECT_ID'
+                sh 'echo $KUBECONFIG'
+                sh 'kubectl apply -f deployment.yaml' 
             }
         }
     }
