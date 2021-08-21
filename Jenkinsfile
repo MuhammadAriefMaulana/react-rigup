@@ -148,15 +148,17 @@ pipeline {
         stage('Apply Terraform') {
             steps {
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
-                    sh 'cd terraform'
-                    sh("sed -i.bak \\"s/KEY_FILE/$GC_KEY/g\\" ./terraform/7terraform.tf")
-                    sh 'terraform init'
-                    // KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
-                    // KUBE_ZONE = google_container_cluster.devops7-cluster.location
-                    // PROJECT_ID = google_container_cluster.devops7-cluster.project
+                    sh '''
+                    cd terraform
+                    sed -i.bak "s/KEY_FILE/$GC_KEY/g" ./terraform/7terraform.tf
+                    terraform init
+                    '''
                 }
             }
             // always {
+            // KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
+            // KUBE_ZONE = google_container_cluster.devops7-cluster.location
+            // PROJECT_ID = google_container_cluster.devops7-cluster.project
             //     sh 'echo ${KUBE_CLUSTER}'
             //     sh 'echo ${KUBE_ZONE}'
             //     sh 'echo ${PROJECT_ID}'
