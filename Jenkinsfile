@@ -143,8 +143,29 @@ pipeline {
         //         }
         //     }
         // }*/
+
+        // stage terraform
+        stage('Apply Terraform') {
+            steps {
+                withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
+                    sh 'cd terraform'
+                    sh 'sed -i.bak "s/KEY_FILE/${GC_KEY}/g" ./terraform/7terraform.tf'
+                    sh 'terraform init'
+                    KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
+                    KUBE_ZONE = google_container_cluster.devops7-cluster.location
+                    PROJECT_ID = google_container_cluster.devops7-cluster.project
+            }
+            always {
+                sh 'echo ${KUBE_CLUSTER}'
+                sh 'echo ${KUBE_ZONE}'
+                sh 'echo ${PROJECT_ID}'
+            }
+            KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
+            KUBE_ZONE = google_container_cluster.devops7-cluster.location
+            PROJECT_ID = google_container_cluster.devops7-cluster.project
+        }
         // stage 9
-        stage('Apply Kubernetes File') {
+        /*stage('Apply Kubernetes File') {
             steps {
                 // sh "chmod +x changeTag.sh"
                 // sh "./changeTag.sh ${DOCKER_TAG}"
@@ -166,7 +187,7 @@ pipeline {
                     sh 'kubectl apply -f deployment.yaml'
                 }
             }
-        }
+        }*/
     }
 }
 
