@@ -154,6 +154,7 @@ pipeline {
                     KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
                     KUBE_ZONE = google_container_cluster.devops7-cluster.location
                     PROJECT_ID = google_container_cluster.devops7-cluster.project
+                }
             }
             always {
                 sh 'echo ${KUBE_CLUSTER}'
