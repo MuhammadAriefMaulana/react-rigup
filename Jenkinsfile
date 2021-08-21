@@ -156,11 +156,11 @@ pipeline {
                     // PROJECT_ID = google_container_cluster.devops7-cluster.project
                 }
             }
-            always {
-                sh 'echo ${KUBE_CLUSTER}'
-                sh 'echo ${KUBE_ZONE}'
-                sh 'echo ${PROJECT_ID}'
-            }
+            // always {
+            //     sh 'echo ${KUBE_CLUSTER}'
+            //     sh 'echo ${KUBE_ZONE}'
+            //     sh 'echo ${PROJECT_ID}'
+            // }
         }
         // stage 9
         /*stage('Apply Kubernetes File') {
