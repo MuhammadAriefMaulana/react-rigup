@@ -151,9 +151,9 @@ pipeline {
                     sh 'cd terraform'
                     sh 'sed -i.bak "s/KEY_FILE/${GC_KEY}/g" ./terraform/7terraform.tf'
                     sh 'terraform init'
-                    KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
-                    KUBE_ZONE = google_container_cluster.devops7-cluster.location
-                    PROJECT_ID = google_container_cluster.devops7-cluster.project
+                    // KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
+                    // KUBE_ZONE = google_container_cluster.devops7-cluster.location
+                    // PROJECT_ID = google_container_cluster.devops7-cluster.project
                 }
             }
             always {
@@ -161,9 +161,6 @@ pipeline {
                 sh 'echo ${KUBE_ZONE}'
                 sh 'echo ${PROJECT_ID}'
             }
-            KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
-            KUBE_ZONE = google_container_cluster.devops7-cluster.location
-            PROJECT_ID = google_container_cluster.devops7-cluster.project
         }
         // stage 9
         /*stage('Apply Kubernetes File') {
