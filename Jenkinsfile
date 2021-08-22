@@ -156,24 +156,31 @@ pipeline {
                             terraform plan -out my.tfplan|| exit 1
 
                             terraform apply -input=false -auto-approve
-                            terraform output kube_cluster > ./creds/kube_cluster.txt
-                            terraform output kube_zone
-                            terraform output project_id
+                            terraform output kube_cluster | sed 's/"//g' > ./creds/kube_cluster.txt
+                            terraform output kube_zone | sed 's/"//g' > ./creds/kube_zone.txt
+                            terraform output project_id | sed 's/"//g' > ./creds/project_id.txt
                             '''
                         
-                            KUBE_CLUSTER_TMP = sh (
+                            KUBE_CLUSTER = sh (
                                 script: 'cat ./creds/kube_cluster.txt',
                                 returnStdout: true
                             )
-                            echo "KUBE_CLUSTER_TMP = ${env.KUBE_CLUSTER_TMP}"
-                            env.KUBE_CLUSTER = KUBE_CLUSTER_TMP
-                            echo "KUBE_CLUSTER = ${env.KUBE_CLUSTER}"
+                            KUBE_ZONE = sh (
+                                script: 'cat ./creds/kube_zone.txt',
+                                returnStdout: true
+                            )
+                            PROJECT_ID = sh (
+                                script: 'cat ./creds/project_id.txt',
+                                returnStdout: true
+                            )
                         }
                         
                     }
                     
 
-                    echo "KUBE_CLUSTER 2= ${env.KUBE_CLUSTER}"
+                    echo "KUBE_CLUSTER= ${env.KUBE_CLUSTER}"
+                    echo "KUBE_ZONE= ${env.KUBE_ZONE}"
+                    echo "PROJECT_ID= ${env.PROJECT_ID}"
                     
             }
             // env.KUBE_CLUSTER = sh("terraform output kube_cluster")
