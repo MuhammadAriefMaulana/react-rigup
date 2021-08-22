@@ -10,7 +10,7 @@ pipeline {
         dockerImageFE = ''
         dockerImageBE = ''
         dockerImageDB = ''
-        SA_ACCOUNT = 'devops-telkomsel-7-new@group7-322208.iam.gserviceaccount.com' //sesuaikan dengan email service account yang digunakan
+        KEY_TEXT = credentials('devops-telkomsel-7-new-SA-text')
         KEY_FILE = 'devops-telkomsel-7-new-SA' //add di credential
         KUBE_CLUSTER = 'mariefm'
         KUBE_ZONE = 'us-west2-a'
@@ -150,7 +150,8 @@ pipeline {
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
                     sh '''
                     cd terraform
-                    sed -i.bak "s/KEY_FILE/$GC_KEY/g" ./terraform/7terraform.tf
+                    mkdir -p creds
+                    echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
                     terraform init
                     '''
                 }
