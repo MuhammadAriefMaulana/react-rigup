@@ -152,7 +152,7 @@ pipeline {
                     cd terraform
                     mkdir -p creds
                     echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
-                    terraform init || exit 0
+                    terraform init && true
                     terraform plan || exit 1
                     '''
                 }
