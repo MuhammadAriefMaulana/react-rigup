@@ -162,7 +162,7 @@ pipeline {
                             '''
                         
                             env.KUBE_CLUSTER = sh (
-                                script: 'cat ./terraform/creds/kube_cluster.txt'
+                                script: 'cat ./creds/kube_cluster.txt'
                                 // returnStdout: true
                             )
                         }
