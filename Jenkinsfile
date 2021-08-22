@@ -157,11 +157,13 @@ pipeline {
                     terraform output kube_zone
                     terraform output project_id
                     '''
-
-                    KUBE_CLUSTER = sh (
-                        script: 'terraform output kube_cluster',
-                        returnStdout: true
-                    ).trim()
+                    script {
+                        KUBE_CLUSTER = sh (
+                            script: 'terraform output kube_cluster',
+                            returnStdout: true
+                        ).trim()
+                    }
+                    
 
                     echo "${env.KUBE_CLUSTER}"
                     
