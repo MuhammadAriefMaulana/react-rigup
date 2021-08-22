@@ -166,9 +166,9 @@ pipeline {
                             '''
                         
                             params.KUBE_CLUSTER = sh (
-                                script: 'cat ./creds/kube_cluster.txt'
-                                // returnStdout: true
-                            )
+                                script: 'cat ./creds/kube_cluster.txt',
+                                returnStdout: true
+                            ).trim()
                         }
                         
                     }
