@@ -18,6 +18,10 @@ pipeline {
 
     }
 
+    parameters {
+        string(defaultValue: 'mariefm', description: 'Kubernetes Cluster', name: 'KUBE_CLUSTER')
+    }
+
     stages {
         /*// stage 1
         stage('Install Dependencies React Project') {
@@ -161,7 +165,7 @@ pipeline {
                             terraform output project_id
                             '''
                         
-                            env.KUBE_CLUSTER = sh (
+                            params.KUBE_CLUSTER = sh (
                                 script: 'cat ./creds/kube_cluster.txt'
                                 // returnStdout: true
                             )
@@ -170,7 +174,7 @@ pipeline {
                     }
                     
 
-                    echo "${env.KUBE_CLUSTER}"
+                    echo "${params.KUBE_CLUSTER}"
                     
             }
             // env.KUBE_CLUSTER = sh("terraform output kube_cluster")
