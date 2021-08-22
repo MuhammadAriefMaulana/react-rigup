@@ -157,15 +157,21 @@ pipeline {
                     terraform output kube_zone
                     terraform output project_id
                     '''
-                    env.KUBE_CLUSTER = sh("terraform output kube_cluster")
-                    env.KUBE_ZONE = sh 'terraform output kube_zone'
-                    env.PROJECT_ID = sh 'terraform output project_id'
+
+                    KUBE_CLUSTER = sh (
+                        script: 'terraform output kube_cluster',
+                        returnStdout: true
+                    ).trim()
 
                     echo "${env.KUBE_CLUSTER}"
-                    echo "${KUBE_ZONE}"
-                    echo "${PROJECT_ID}"
+                    
             }
+            // env.KUBE_CLUSTER = sh("terraform output kube_cluster")
+            // env.KUBE_ZONE = sh 'terraform output kube_zone'
+            // env.PROJECT_ID = sh 'terraform output project_id'
             // echo "terraform apply -input=false -auto-approve"
+            // echo "${KUBE_ZONE}"
+            // echo "${PROJECT_ID}"
             // always {
             // KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
             // KUBE_ZONE = google_container_cluster.devops7-cluster.location
