@@ -159,9 +159,13 @@ pipeline {
                     terraform output kube_zone
                     terraform output project_id
                     '''
-                    KUBE_CLUSTER = sh 'terraform output kube_cluster'
-                    KUBE_ZONE = sh 'terraform output kube_zone'
-                    PROJECT_ID = sh 'terraform output project_id'
+                    env.KUBE_CLUSTER = sh 'terraform output kube_cluster'
+                    env.KUBE_ZONE = sh 'terraform output kube_zone'
+                    env.PROJECT_ID = sh 'terraform output project_id'
+
+                    echo "${env.KUBE_CLUSTER}"
+                    echo "${KUBE_ZONE}"
+                    echo "${PROJECT_ID}"
                 }
             }
             // always {
