@@ -181,7 +181,7 @@ pipeline {
                 script {
                     dir('./terraform') {
                         sh '''                            
-                        terraform apply "my.tfplan" -input=false -auto-approve
+                        terraform apply -input=false -auto-approve
                         terraform output kube_cluster | sed 's/"//g' > ./creds/kube_cluster.txt
                         terraform output kube_zone | sed 's/"//g' > ./creds/kube_zone.txt
                         terraform output project_id | sed 's/"//g' > ./creds/project_id.txt
