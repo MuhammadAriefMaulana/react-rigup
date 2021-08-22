@@ -165,17 +165,19 @@ pipeline {
                             terraform output project_id
                             '''
                         
-                            env.KUBE_CLUSTER = sh (
-                                script: 'cat ./creds/kube_cluster.txt',
-                                returnStdout: true
-                            ).trim()
-                            echo "${env.KUBE_CLUSTER}"
+                            KUBE_CLUSTER_TMP = sh (
+                                script: 'cat ./creds/kube_cluster.txt'
+                                // returnStdout: true
+                            )
+                            echo "KUBE_CLUSTER_TMP = ${env.KUBE_CLUSTER_TMP}"
+                            env.KUBE_CLUSTER = KUBE_CLUSTER_TMP
+                            echo "KUBE_CLUSTER = ${env.KUBE_CLUSTER}"
                         }
                         
                     }
                     
 
-                    echo "${env.KUBE_CLUSTER}"
+                    echo "KUBE_CLUSTER 2 = ${env.KUBE_CLUSTER}"
                     
             }
             // env.KUBE_CLUSTER = sh("terraform output kube_cluster")
