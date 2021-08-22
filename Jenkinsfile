@@ -189,13 +189,13 @@ pipeline {
             // }
         }
 
-        stage('Terraform Apply') {
-            steps {
-                script() {
-                    
-                }
-            }
-        }
+        // stage('Terraform Apply') {
+        //     steps {
+        //         script() {
+
+        //         }
+        //     }
+        // }
         // stage 9
         /*stage('Apply Kubernetes File') {
             steps {
