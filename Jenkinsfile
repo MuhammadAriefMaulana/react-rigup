@@ -147,18 +147,19 @@ pipeline {
         // stage terraform
         stage('Apply Terraform') {
             steps {
-                    sh '''
-                    cd terraform
-                    mkdir -p creds
-                    echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
-                    terraform init -force-copy || exit 1
-                    terraform plan -out my.tfplan|| exit 1
-                    terraform apply -input=false -auto-approve
-                    terraform output kube_cluster
-                    terraform output kube_zone
-                    terraform output project_id
-                    '''
                     script {
+                        sh '''
+                        cd terraform
+                        mkdir -p creds
+                        echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
+                        terraform init -force-copy || exit 1
+                        terraform plan -out my.tfplan|| exit 1
+                        terraform apply -input=false -auto-approve
+                        terraform output kube_cluster
+                        terraform output kube_zone
+                        terraform output project_id
+                        '''
+                    
                         KUBE_CLUSTER = sh (
                             script: 'terraform output kube_cluster',
                             returnStdout: true
