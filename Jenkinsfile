@@ -152,8 +152,8 @@ pipeline {
                     cd terraform
                     mkdir -p creds
                     echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
-                    terraform init || exit 1
-                    terraform plan
+                    terraform init -reconfigure || exit 1
+                    terraform plan || exit 1
                     '''
                 }
             }
