@@ -152,7 +152,7 @@ pipeline {
                     cd terraform
                     mkdir -p creds
                     echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
-                    terraform init
+                    terraform init -migrate-state
                     '''
                 }
             }
