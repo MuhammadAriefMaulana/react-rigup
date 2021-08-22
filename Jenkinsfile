@@ -10,6 +10,7 @@ pipeline {
         dockerImageFE = ''
         dockerImageBE = ''
         dockerImageDB = ''
+        SERVICE_ACCOUNT = 'devops-telkomsel-7-new@group7-322208.iam.gserviceaccount.com'
         KEY_TEXT = credentials('devops-telkomsel-7-new-SA-text')
         KEY_FILE = 'devops-telkomsel-7-new-SA' //add di credential
         //KUBE_CLUSTER = 'mariefm'
@@ -208,7 +209,8 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
                     sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
-                    sh 'gcloud container clusters get-credentials ${KUBE_CLUSTER} --zone ${KUBE_ZONE} --project ${PROJECT_ID}'
+                    sh 'gcloud container clusters get-credentials ${SERVICE_ACCOUNT} --zone ${KUBE_ZONE} --project ${PROJECT_ID}'
+                    sh 'cat ~/.kube/config'
                     sh 'kubectl apply -f deployment.yaml'
                 }
             }
