@@ -191,7 +191,9 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                script()
+                script() {
+                    
+                }
             }
         }
         // stage 9
