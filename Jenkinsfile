@@ -12,15 +12,11 @@ pipeline {
         dockerImageDB = ''
         KEY_TEXT = credentials('devops-telkomsel-7-new-SA-text')
         KEY_FILE = 'devops-telkomsel-7-new-SA' //add di credential
-        KUBE_CLUSTER = 'mariefm'
+        //KUBE_CLUSTER = 'mariefm'
         KUBE_ZONE = 'us-west2-a'
         PROJECT_ID = 'group7-322208'
 
     }
-
-    // parameters {
-    //     string(defaultValue: 'mariefm', description: 'Kubernetes Cluster', name: 'KUBE_CLUSTER')
-    // }
 
     stages {
         /*// stage 1
@@ -177,7 +173,7 @@ pipeline {
                     }
                     
 
-                    echo "KUBE_CLUSTER 2 = ${env.KUBE_CLUSTER}"
+                    echo "KUBE_CLUSTER 2= ${env.KUBE_CLUSTER}"
                     
             }
             // env.KUBE_CLUSTER = sh("terraform output kube_cluster")
