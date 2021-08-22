@@ -147,7 +147,6 @@ pipeline {
         // stage terraform
         stage('Apply Terraform') {
             steps {
-                withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
                     sh '''
                     cd terraform
                     mkdir -p creds
@@ -165,7 +164,6 @@ pipeline {
                     echo "${env.KUBE_CLUSTER}"
                     echo "${KUBE_ZONE}"
                     echo "${PROJECT_ID}"
-                }
             }
             // echo "terraform apply -input=false -auto-approve"
             // always {
