@@ -6,8 +6,8 @@ terraform {
  }
  backend "gcs" {
     # credentials = "/home/muhammadmal/group7-322208-75e354f7f7a2.json"
-    credentials = KEY_FILE
-    bucket = "./creds/serviceaccount.json"
+    credentials = "./creds/serviceaccount.json"
+    bucket = "devops_telkomsel_7"
     prefix = "terraform/mariefm"
   }
 }
