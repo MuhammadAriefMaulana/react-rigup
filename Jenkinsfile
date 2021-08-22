@@ -155,13 +155,13 @@ pipeline {
                         terraform init -force-copy || exit 1
                         terraform plan -out my.tfplan|| exit 1
                         terraform apply -input=false -auto-approve
-                        terraform output kube_cluster
+                        terraform output kube_cluster > ./creds/kube_cluster.txt
                         terraform output kube_zone
                         terraform output project_id
                         '''
                     
                         KUBE_CLUSTER = sh (
-                            script: 'terraform output kube_cluster'
+                            script: 'cat ./terraform/creds/kube_cluster.txt'
                             // returnStdout: true
                         )
                     }
