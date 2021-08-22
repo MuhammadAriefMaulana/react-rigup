@@ -162,8 +162,8 @@ pipeline {
                             '''
                         
                             KUBE_CLUSTER_TMP = sh (
-                                script: 'cat ./creds/kube_cluster.txt'
-                                // returnStdout: true
+                                script: 'cat ./creds/kube_cluster.txt',
+                                returnStdout: true
                             )
                             echo "KUBE_CLUSTER_TMP = ${env.KUBE_CLUSTER_TMP}"
                             env.KUBE_CLUSTER = KUBE_CLUSTER_TMP
