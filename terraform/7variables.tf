@@ -29,7 +29,7 @@ variable "machine_type" {
 
 variable "service_account" {
   type = string
-  default = "devops-telkomsel-7@group7-322208.iam.gserviceaccount.com"
+  default = "devops-telkomsel-7-new@group7-322208.iam.gserviceaccount.com" //IMPORTANT : perlu diubah sesuai service key yg digunakan
 }
 
 variable "cluster_secondary_range_name" {
