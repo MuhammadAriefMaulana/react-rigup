@@ -160,7 +160,6 @@ pipeline {
                             terraform output kube_zone | sed 's/"//g' > ./creds/kube_zone.txt
                             terraform output project_id | sed 's/"//g' > ./creds/project_id.txt
                             '''
-                        
                             env.KUBE_CLUSTER = sh (
                                 script: 'cat ./creds/kube_cluster.txt',
                                 returnStdout: true
@@ -183,20 +182,6 @@ pipeline {
                     echo "PROJECT_ID= ${PROJECT_ID}"
                     
             }
-            // env.KUBE_CLUSTER = sh("terraform output kube_cluster")
-            // env.KUBE_ZONE = sh 'terraform output kube_zone'
-            // env.PROJECT_ID = sh 'terraform output project_id'
-            // echo "terraform apply -input=false -auto-approve"
-            // echo "${KUBE_ZONE}"
-            // echo "${PROJECT_ID}"
-            // always {
-            // KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
-            // KUBE_ZONE = google_container_cluster.devops7-cluster.location
-            // PROJECT_ID = google_container_cluster.devops7-cluster.project
-            //     sh 'echo ${KUBE_CLUSTER}'
-            //     sh 'echo ${KUBE_ZONE}'
-            //     sh 'echo ${PROJECT_ID}'
-            // }
         }
 
         // stage('Terraform Apply') {
@@ -207,7 +192,7 @@ pipeline {
         //     }
         // }
         // stage 9
-        /*stage('Apply Kubernetes File') {
+        stage('Apply Kubernetes File') {
             steps {
                 // sh "chmod +x changeTag.sh"
                 // sh "./changeTag.sh ${DOCKER_TAG}"
@@ -226,10 +211,10 @@ pipeline {
                     sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
                     sh 'gcloud container clusters get-credentials ${KUBE_CLUSTER} --zone ${KUBE_ZONE} --project ${PROJECT_ID}'
                     sh 'echo $KUBECONFIG'
-                    sh 'kubectl apply -f deployment.yaml'
+                    // sh 'kubectl apply -f deployment.yaml'
                 }
             }
-        }*/
+        }
     }
 }
 
