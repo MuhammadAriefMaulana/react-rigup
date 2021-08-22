@@ -1,5 +1,5 @@
 variable "name" {
-  default = "mariefm-3" //kalau mau test2 rubah disini default=devops-telkomsel-7
+  default = "mariefm-2" //kalau mau test2 rubah disini default=devops-telkomsel-7
 }
 
 variable "subnet" {
