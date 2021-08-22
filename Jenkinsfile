@@ -154,64 +154,63 @@ pipeline {
                             echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
                             terraform init -force-copy || exit 1
                             terraform plan -out my.tfplan|| exit 1
-
-                            terraform apply -input=false -auto-approve
-                            terraform output kube_cluster | sed 's/"//g' > ./creds/kube_cluster.txt
-                            terraform output kube_zone | sed 's/"//g' > ./creds/kube_zone.txt
-                            terraform output project_id | sed 's/"//g' > ./creds/project_id.txt
                             '''
-                            env.KUBE_CLUSTER = sh (
-                                script: 'cat ./creds/kube_cluster.txt',
-                                returnStdout: true
+                            // env.KUBE_CLUSTER = sh (
+                            //     script: 'cat ./creds/kube_cluster.txt',
+                            //     returnStdout: true
+                            // )
+                            // env.KUBE_ZONE = sh (
+                            //     script: 'cat ./creds/kube_zone.txt',
+                            //     returnStdout: true
+                            // )
+                            // env.PROJECT_ID = sh (
+                            //     script: 'cat ./creds/project_id.txt',
+                            //     returnStdout: true
                             )
-                            env.KUBE_ZONE = sh (
-                                script: 'cat ./creds/kube_zone.txt',
-                                returnStdout: true
-                            )
-                            env.PROJECT_ID = sh (
-                                script: 'cat ./creds/project_id.txt',
-                                returnStdout: true
-                            )
-                        }
-                        
+                        }                        
                     }
-                    
-
-                    echo "KUBE_CLUSTER= ${KUBE_CLUSTER}"
-                    echo "KUBE_ZONE= ${KUBE_ZONE}"
-                    echo "PROJECT_ID= ${PROJECT_ID}"
+                    input message: "Continue to Terraform Apply?"
+                    // echo "KUBE_CLUSTER= ${KUBE_CLUSTER}"
+                    // echo "KUBE_ZONE= ${KUBE_ZONE}"
+                    // echo "PROJECT_ID= ${PROJECT_ID}"
                     
             }
         }
 
-        // stage('Terraform Apply') {
-        //     steps {
-        //         script() {
-
-        //         }
-        //     }
-        // }
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    dir('./terraform') {
+                        sh '''                            
+                        terraform apply my.tfplan -input=false -auto-approve
+                        terraform output kube_cluster | sed 's/"//g' > ./creds/kube_cluster.txt
+                        terraform output kube_zone | sed 's/"//g' > ./creds/kube_zone.txt
+                        terraform output project_id | sed 's/"//g' > ./creds/project_id.txt
+                        '''
+                        env.KUBE_CLUSTER = sh (
+                            script: 'cat ./creds/kube_cluster.txt',
+                            returnStdout: true
+                        )
+                        env.KUBE_ZONE = sh (
+                            script: 'cat ./creds/kube_zone.txt',
+                            returnStdout: true
+                        )
+                        env.PROJECT_ID = sh (
+                            script: 'cat ./creds/project_id.txt',
+                            returnStdout: true
+                        )
+                    }                        
+                }
+                input message: "Continue to Kubectl Apply?"
+            }
+        }
         // stage 9
         stage('Apply Kubernetes File') {
             steps {
-                // sh "chmod +x changeTag.sh"
-                // sh "./changeTag.sh ${DOCKER_TAG}"
-                // withKubeConfig([credentialsId: 'kubeconfig']) {
-                //     // sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'  
-                //     // sh 'chmod u+x ./kubectl'  
-                //     sh 'echo $KUBECONFIG'
-                //     sh 'kubectl apply -f deployment.yaml' 
-                // }
-                // sh 'gcloud auth activate-service-account $SA_ACCOUNT --key-file=$KEY_FILE'
-                // sh 'gcloud container clusters get-credentials $KUBE_CLUSTER --zone $KUBE_ZONE --project $PROJECT_ID'
-                // sh 'echo $KUBECONFIG'
-                // sh 'kubectl apply -f deployment.yaml' 
-
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
                     sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
                     sh 'gcloud container clusters get-credentials ${KUBE_CLUSTER} --zone ${KUBE_ZONE} --project ${PROJECT_ID}'
-                    sh 'echo $KUBECONFIG'
-                    // sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f deployment.yaml'
                 }
             }
         }
