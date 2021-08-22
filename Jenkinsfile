@@ -152,7 +152,7 @@ pipeline {
                     mkdir -p creds
                     echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
                     terraform init -force-copy || exit 1
-                    terraform plan || exit 1
+                    terraform plan -out my.tfplan|| exit 1
                     terraform output kube_cluster
                     terraform output kube_zone
                     terraform output project_id
