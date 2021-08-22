@@ -161,9 +161,9 @@ pipeline {
                         '''
                     
                         KUBE_CLUSTER = sh (
-                            script: 'terraform output kube_cluster',
-                            returnStdout: true
-                        ).trim()
+                            script: 'terraform output kube_cluster'
+                            // returnStdout: true
+                        )
                     }
                     
 
