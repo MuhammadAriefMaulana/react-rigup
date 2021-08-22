@@ -13,8 +13,8 @@ pipeline {
         KEY_TEXT = credentials('devops-telkomsel-7-new-SA-text')
         KEY_FILE = 'devops-telkomsel-7-new-SA' //add di credential
         //KUBE_CLUSTER = 'mariefm'
-        KUBE_ZONE = 'us-west2-a'
-        PROJECT_ID = 'group7-322208'
+        //KUBE_ZONE = 'us-west2-a'
+        // PROJECT_ID = 'group7-322208'
 
     }
 
@@ -161,15 +161,15 @@ pipeline {
                             terraform output project_id | sed 's/"//g' > ./creds/project_id.txt
                             '''
                         
-                            KUBE_CLUSTER = sh (
+                            env.KUBE_CLUSTER = sh (
                                 script: 'cat ./creds/kube_cluster.txt',
                                 returnStdout: true
                             )
-                            KUBE_ZONE = sh (
+                            env.KUBE_ZONE = sh (
                                 script: 'cat ./creds/kube_zone.txt',
                                 returnStdout: true
                             )
-                            PROJECT_ID = sh (
+                            env.PROJECT_ID = sh (
                                 script: 'cat ./creds/project_id.txt',
                                 returnStdout: true
                             )
@@ -178,9 +178,9 @@ pipeline {
                     }
                     
 
-                    echo "KUBE_CLUSTER= ${env.KUBE_CLUSTER}"
-                    echo "KUBE_ZONE= ${env.KUBE_ZONE}"
-                    echo "PROJECT_ID= ${env.PROJECT_ID}"
+                    echo "KUBE_CLUSTER= ${KUBE_CLUSTER}"
+                    echo "KUBE_ZONE= ${KUBE_ZONE}"
+                    echo "PROJECT_ID= ${PROJECT_ID}"
                     
             }
             // env.KUBE_CLUSTER = sh("terraform output kube_cluster")
