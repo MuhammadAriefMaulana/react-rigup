@@ -166,14 +166,13 @@ pipeline {
                             // env.PROJECT_ID = sh (
                             //     script: 'cat ./creds/project_id.txt',
                             //     returnStdout: true
-                            )
+                            // )
                         }                        
                     }
                     input message: "Continue to Terraform Apply?"
                     // echo "KUBE_CLUSTER= ${KUBE_CLUSTER}"
                     // echo "KUBE_ZONE= ${KUBE_ZONE}"
-                    // echo "PROJECT_ID= ${PROJECT_ID}"
-                    
+                    // echo "PROJECT_ID= ${PROJECT_ID}"                 
             }
         }
 
