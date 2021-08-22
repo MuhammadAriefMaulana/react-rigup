@@ -14,7 +14,7 @@ terraform {
 
 provider "google" {
 #  credentials = file("/home/muhammadmal/group7-322208-75e354f7f7a2.json")
- credentials = "./creds/serviceaccount.json"
+ credentials = file("./creds/serviceaccount.json")
  project = "group7-322208"
  region = var.region
  zone = var.zone
