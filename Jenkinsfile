@@ -154,12 +154,11 @@ pipeline {
                     echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
                     terraform init -force-copy || exit 1
                     terraform plan || exit 1
-                    echo "terraform apply -input=false -auto-approve"
                     terraform output kube_cluster
                     terraform output kube_zone
                     terraform output project_id
                     '''
-                    env.KUBE_CLUSTER = sh 'terraform output kube_cluster'
+                    env.KUBE_CLUSTER = sh("terraform output kube_cluster")
                     env.KUBE_ZONE = sh 'terraform output kube_zone'
                     env.PROJECT_ID = sh 'terraform output project_id'
 
@@ -168,6 +167,7 @@ pipeline {
                     echo "${PROJECT_ID}"
                 }
             }
+            // echo "terraform apply -input=false -auto-approve"
             // always {
             // KUBE_CLUSTER = google_container_cluster.devops7-cluster.name
             // KUBE_ZONE = google_container_cluster.devops7-cluster.location
