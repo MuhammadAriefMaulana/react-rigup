@@ -153,7 +153,7 @@ pipeline {
                             mkdir -p creds
                             echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
                             terraform init -force-copy || exit 1
-                            terraform plan -out my.tfplan|| exit 1
+                            terraform plan -out my.tfplan || exit 1
                             '''
                             // env.KUBE_CLUSTER = sh (
                             //     script: 'cat ./creds/kube_cluster.txt',
@@ -181,7 +181,7 @@ pipeline {
                 script {
                     dir('./terraform') {
                         sh '''                            
-                        terraform apply my.tfplan -input=false -auto-approve
+                        terraform apply "my.tfplan" -input=false -auto-approve
                         terraform output kube_cluster | sed 's/"//g' > ./creds/kube_cluster.txt
                         terraform output kube_zone | sed 's/"//g' > ./creds/kube_zone.txt
                         terraform output project_id | sed 's/"//g' > ./creds/project_id.txt
