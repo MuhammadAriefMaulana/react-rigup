@@ -148,35 +148,58 @@ pipeline {
         // stage terraform
         stage('Terraform Plan') {
             steps {
-                    script {
-                        dir('./terraform') {
-                            sh '''
-                            mkdir -p creds
-                            echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
-                            terraform init -force-copy || exit 1
-                            terraform plan -out my.tfplan || exit 1
-                            '''
-                            // env.KUBE_CLUSTER = sh (
-                            //     script: 'cat ./creds/kube_cluster.txt',
-                            //     returnStdout: true
-                            // )
-                            // env.KUBE_ZONE = sh (
-                            //     script: 'cat ./creds/kube_zone.txt',
-                            //     returnStdout: true
-                            // )
-                            // env.PROJECT_ID = sh (
-                            //     script: 'cat ./creds/project_id.txt',
-                            //     returnStdout: true
-                            // )
-                        }                        
-                    }
-                    input message: "Continue to Terraform Apply?"
-                    // echo "KUBE_CLUSTER= ${KUBE_CLUSTER}"
-                    // echo "KUBE_ZONE= ${KUBE_ZONE}"
-                    // echo "PROJECT_ID= ${PROJECT_ID}"                 
+                script {
+                    dir('./terraform') {
+                        sh '''
+                        mkdir -p creds
+                        echo $KEY_TEXT | base64 -d > ./creds/serviceaccount.json
+                        terraform init -force-copy || exit 1
+                        terraform plan -out my.tfplan || exit 1
+                        '''
+                        // env.KUBE_CLUSTER = sh (
+                        //     script: 'cat ./creds/kube_cluster.txt',
+                        //     returnStdout: true
+                        // )
+                        // env.KUBE_ZONE = sh (
+                        //     script: 'cat ./creds/kube_zone.txt',
+                        //     returnStdout: true
+                        // )
+                        // env.PROJECT_ID = sh (
+                        //     script: 'cat ./creds/project_id.txt',
+                        //     returnStdout: true
+                        // )
+                    }                        
+                }
+                input message: "Continue to Terraform Apply?"
+                // echo "KUBE_CLUSTER= ${KUBE_CLUSTER}"
+                // echo "KUBE_ZONE= ${KUBE_ZONE}"
+                // echo "PROJECT_ID= ${PROJECT_ID}"                 
             }
         }
-
+        stage('Terraform Destroy') {
+            steps {
+                script {
+                    dir('./terraform') {
+                        sh '''
+                        terraform destroy
+                        '''
+                        // env.KUBE_CLUSTER = sh (
+                        //     script: 'cat ./creds/kube_cluster.txt',
+                        //     returnStdout: true
+                        // )
+                        // env.KUBE_ZONE = sh (
+                        //     script: 'cat ./creds/kube_zone.txt',
+                        //     returnStdout: true
+                        // )
+                        // env.PROJECT_ID = sh (
+                        //     script: 'cat ./creds/project_id.txt',
+                        //     returnStdout: true
+                        // )
+                    }       
+                }
+            }
+        }
+/*
         stage('Terraform Apply') {
             steps {
                 script {
@@ -215,7 +238,7 @@ pipeline {
                     // sh 'kubectl apply -f deployment.yaml'
                 }
             }
-        }
+        }*/
     }
 }
 

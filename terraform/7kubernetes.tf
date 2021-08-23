@@ -20,7 +20,7 @@ resource "google_compute_firewall" "devops7-fw" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22", "80", "443", "8080", "2000", "3000", "3306"]
+    ports    = ["22", "80", "443", "8080", "1000-2000", "3000", "3306"]
   }
 }
 
