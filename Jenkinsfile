@@ -15,13 +15,6 @@ pipeline {
     }
 
     stages {
-        stage('Install Dependencies React Project') {
-            steps {
-                echo 'Start installing dependencies react project'
-                sh 'npm install'
-            }
-        }
-
         stage('Check Jenkins Workspace') {
             steps {
                 sh "chmod +x -R ${env.WORKSPACE}"
