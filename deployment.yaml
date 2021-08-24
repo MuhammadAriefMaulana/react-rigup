@@ -7,7 +7,7 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rigup-frontend
+  name: frontend
   namespace: mariefm  #ganti namespace masing2
 spec:
   type: LoadBalancer
@@ -53,15 +53,15 @@ metadata:
   name: rigup-frontend-deployment
   namespace: mariefm  #ganti namespace masing2
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: rigup
       tier: frontend
   strategy:
     rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 25%
+      maxSurge: 33%
+      maxUnavailable: 33%
     type: RollingUpdate
   template:
     metadata:
@@ -73,13 +73,22 @@ spec:
       - image: muhammadariefmaulana/rigup_frontend:latest
         imagePullPolicy: IfNotPresent
         name: frontend
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         env:
         - name: API_URL
-          value: http://$(BACKEND_SERVICE_HOST):2000
+          value: http://backend:2000
+          # value: http://$(BACKEND_SERVICE_HOST):2000
         - name: NODE_ENV
           value: production
         - name: PUBLIC_URL
-          value: http://$(RIGUP_FRONTEND_SERVICE_HOST):$(RIGUP_FRONTEND_SERVICE_PORT)
+          value: http://frontend:3000
+          # value: http://$(RIGUP_FRONTEND_SERVICE_HOST):$(RIGUP_FRONTEND_SERVICE_PORT)
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -97,8 +106,8 @@ spec:
       tier: backend
   strategy:
     rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 25%
+      maxSurge: 50%
+      maxUnavailable: 50%
     type: RollingUpdate
   template:
     metadata:
@@ -110,9 +119,17 @@ spec:
       - image: muhammadariefmaulana/rigup_backend:latest
         imagePullPolicy: IfNotPresent
         name: backend
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         env:
         - name: HOST
-          value: $(DATABASE_SERVICE_HOST)
+          value: database
+          # value: $(DATABASE_SERVICE_HOST)
         - name: MYSQL_PASSWORD
           value: secretadmin
         - name: PORT
@@ -120,7 +137,8 @@ spec:
         - name: SECRET_KEY
           value: asdf1234zxc.
         - name: FRONTEND_URL
-          value: http://$(RIGUP_FRONTEND_SERVICE_HOST):80
+          value: http://frontend:80
+          # value: http://$(RIGUP_FRONTEND_SERVICE_HOST):80
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -138,8 +156,8 @@ spec:
       tier: db
   strategy:
     rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 25%
+      maxSurge: 50%
+      maxUnavailable: 50%
     type: RollingUpdate
   template:
     metadata:
@@ -157,31 +175,39 @@ spec:
         - name: MYSQL_DATABASE
           value: rigdb_rev2
 ---
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: hpa-fe
-  namespace: mariefm
+  name: devops7-hpa
+  namespace: joshuakri
 spec:
-  maxReplicas: 10
-  minReplicas: 1
+  maxReplicas: 4
+  minReplicas: 2
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: rigup-frontend-deployment
-  targetCPUUtilizationPercentage: 60
-status:
-  currentCPUUtilizationPercentage: 1
-  currentReplicas: 3
-  desiredReplicas: 3
+  metrics:
+   - type: Resource
+     resource:
+       name: cpu
+       target:
+         type: Utilization
+         averageUtilization: 70
+   - type: Resource
+     resource:
+       name: memory
+       target:
+         type: Utilization
+         averageUtilization: 70
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-mariefm-ingress
+  name: frontend-ingress
   namespace: mariefm
   labels:
-    name: frontend-mariefm-ingress
+    name: frontend-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
