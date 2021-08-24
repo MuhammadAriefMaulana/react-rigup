@@ -234,8 +234,9 @@ pipeline {
                     sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
                     sh 'gcloud container clusters get-credentials ${KUBE_CLUSTER} --zone ${KUBE_ZONE} --project ${PROJECT_ID}'
                     sh 'cat ~/.kube/config'
-                    sh 'kubectl get pod'
-                    // sh 'kubectl apply -f deployment.yaml'
+                    // sh 'kubectl get pod'
+                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl get all'
                 }
             }
         }
