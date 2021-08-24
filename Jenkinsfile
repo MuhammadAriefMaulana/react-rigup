@@ -176,7 +176,7 @@ pipeline {
                 // echo "PROJECT_ID= ${PROJECT_ID}"                 
             }
         }
-        stage('Terraform Destroy') {
+        /*stage('Terraform Destroy') {
             steps {
                 script {
                     dir('./terraform') {
@@ -198,8 +198,8 @@ pipeline {
                     }       
                 }
             }
-        }
-/*
+        }*/
+
         stage('Terraform Apply') {
             steps {
                 script {
@@ -238,7 +238,7 @@ pipeline {
                     // sh 'kubectl apply -f deployment.yaml'
                 }
             }
-        }*/
+        }
     }
 }
 
