@@ -64,7 +64,7 @@ pipeline {
                 sh 'docker run -d --rm --name frontend -p 8081:80 $registryFrontEnd'
                 sh 'docker run -d --rm --name backend -p 2000:2000 $registryBackEnd'
                 sh 'docker run -d --rm --name database -p 3306:3306 $registryDatabase'
-                input message: "Done Test Docker Image. Continue?"
+                // input message: "Done Test Docker Image. Continue?"
             }
         }
 
@@ -124,7 +124,7 @@ pipeline {
                         '''
                     }                        
                 }
-                input message: "Continue to Terraform Apply?"               
+                // input message: "Continue to Terraform Apply?"               
             }
         }
 
@@ -165,7 +165,7 @@ pipeline {
                         echo "PROJECT_ID= ${PROJECT_ID}"  
                     }                        
                 }
-                input message: "Continue to Kubectl Apply?"
+                // input message: "Continue to Kubectl Apply?"
             }
         }
 

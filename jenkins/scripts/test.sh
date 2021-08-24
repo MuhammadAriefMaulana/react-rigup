@@ -1,12 +1,20 @@
 #!/bin/bash
 # nvm --version
 # vpm --version
-ME='whoami'
+ME=`whoami`
 echo "WHOAMI = $ME "
+echo ""
 echo "$PATH"
+echo ""
 uname -a
-gcloud --version || true
-docker --version || true
-terraform --version || true
-java --version || true
-kubectl version || true
+echo ""
+gcloud --version
+echo ""
+docker --version
+echo ""
+terraform --version
+echo ""
+java --version
+echo ""
+kubectl version
+echo ""

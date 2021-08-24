@@ -178,8 +178,8 @@ spec:
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: devops7-hpa
-  namespace: joshuakri
+  name: frontend-hpa
+  namespace: mariefm
 spec:
   maxReplicas: 4
   minReplicas: 2
