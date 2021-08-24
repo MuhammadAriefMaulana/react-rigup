@@ -18,8 +18,8 @@ pipeline {
         stage('Check Jenkins Workspace') {
             steps {
                 sh "chmod +x -R ${env.WORKSPACE}"
-                sh 'sudo groupadd docker'
-                sh 'sudo usermod -aG docker $USER'
+                // sh 'sudo groupadd docker'
+                // sh 'sudo usermod -aG docker $USER'
                 sh './jenkins/scripts/test.sh'
             }
         }
