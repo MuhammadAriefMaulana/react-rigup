@@ -178,8 +178,8 @@ pipeline {
                     sh 'cat ~/.kube/config'
                     //generate a self-signed certificate and private key with:
                     sh '''
-                    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress.key -out ingress.cert -subj "/CN=devops7.telkomsel.com/O=devops7.telkomsel.com"
-                    kubectl create secret tls ingress-cert --key ingress.key --cert ingress.cert -n $NAMESPACE
+                    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress.key -out ingress.cert -subj "/CN=devops7.telkomsel.com/O=devops7.telkomsel.com" || true
+                    kubectl create secret tls ingress-cert --key ingress.key --cert ingress.cert -n $NAMESPACE || true
                     '''
                     //apply kubernetes
                     // sh 'kubectl get pod'
