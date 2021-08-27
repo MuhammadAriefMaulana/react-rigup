@@ -222,7 +222,7 @@ pipeline {
                     '''
                     //apply kubernetes
                     // sh 'kubectl get pod'
-                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f kubernetes/deployment.yaml'
                     //get all resource
                     sh 'kubectl get all -n $NAMESPACE'
                 }
