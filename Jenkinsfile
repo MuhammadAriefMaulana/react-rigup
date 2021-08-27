@@ -202,6 +202,40 @@ pipeline {
             }
         }
 
+        stage('Kubectl Init') {
+            when {
+                anyOf {
+                    changeset "kubernetes/*.yaml"
+                }
+            }
+            steps {
+                withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
+                    //authentication
+                    sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
+                    sh 'gcloud container clusters get-credentials ${KUBE_CLUSTER} --zone ${KUBE_ZONE} --project ${PROJECT_ID}'
+                    sh 'cat ~/.kube/config'                
+                }
+            }
+        }
+
+
+        stage('Kubectl Diff') {
+            when {
+                anyOf {
+                    changeset "kubernetes/*.yaml"
+                }
+            }
+            steps {
+                withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {             
+                    // See the difference
+                    sh 'kubectl diff -f kubernetes/deployment.yaml'
+                    //get resource
+                    sh 'kubectl get -f kubernetes/deployment.yaml'
+                }
+                input message: "Continue to Kubectl Apply?"
+            }
+        }
+
         stage('Apply Kubernetes File') {
             when {
                 allOf {
@@ -211,10 +245,6 @@ pipeline {
             }
             steps {
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
-                    //authentication
-                    sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
-                    sh 'gcloud container clusters get-credentials ${KUBE_CLUSTER} --zone ${KUBE_ZONE} --project ${PROJECT_ID}'
-                    sh 'cat ~/.kube/config'
                     //generate a self-signed certificate and private key with:
                     sh '''
                     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress.key -out ingress.cert -subj "/CN=devops7.telkomsel.com/O=devops7.telkomsel.com" || true
@@ -224,7 +254,7 @@ pipeline {
                     // sh 'kubectl get pod'
                     sh 'kubectl apply -f kubernetes/deployment.yaml'
                     //get all resource
-                    sh 'kubectl get all -n $NAMESPACE'
+                    sh 'kubectl get -f kubernetes/deployment.yaml'
                 }
             }
         }
