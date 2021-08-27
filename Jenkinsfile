@@ -8,9 +8,9 @@ pipeline {
         SERVICE_ACCOUNT = 'devops-telkomsel-7-new@group7-322208.iam.gserviceaccount.com'
         KEY_TEXT = credentials('devops-telkomsel-7-new-SA-text') //add di credential
         KEY_FILE = 'devops-telkomsel-7-new-SA' //add di credential
-        //KUBE_CLUSTER = 'mariefm'
-        //KUBE_ZONE = 'us-west2-a'
-        //PROJECT_ID = 'group7-322208'
+        KUBE_CLUSTER = 'mariefm-2'
+        KUBE_ZONE = 'us-west2-a'
+        PROJECT_ID = 'group7-322208'
         NAMESPACE = 'mariefm'
     }
 
@@ -203,6 +203,12 @@ pipeline {
         }
 
         stage('Apply Kubernetes File') {
+            when {
+                allOf {
+                    branch "main"
+                    changeset "**/deployment.yml"
+                }
+            }
             steps {
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
                     //authentication
