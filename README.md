@@ -14,3 +14,7 @@
 
 Ubah API_URL sesuai dengan alamat backend server kamu di dalam file:
 **/src/support/API_URL.js**
+
+
+### See other repo :
+https://github.com/MuhammadAriefMaulana/react-rigup-infra
