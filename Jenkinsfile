@@ -206,7 +206,7 @@ pipeline {
             when {
                 allOf {
                     branch "main"
-                    changeset "**/deployment.yml"
+                    changeset "kubernetes/*.yaml"
                 }
             }
             steps {
