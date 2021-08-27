@@ -8,14 +8,21 @@ pipeline {
         SERVICE_ACCOUNT = 'devops-telkomsel-7-new@group7-322208.iam.gserviceaccount.com'
         KEY_TEXT = credentials('devops-telkomsel-7-new-SA-text') //add di credential
         KEY_FILE = 'devops-telkomsel-7-new-SA' //add di credential
-        //KUBE_CLUSTER = 'mariefm'
-        //KUBE_ZONE = 'us-west2-a'
-        //PROJECT_ID = 'group7-322208'
+        KUBE_CLUSTER = 'mariefm-2'
+        KUBE_ZONE = 'us-west2-a'
+        PROJECT_ID = 'group7-322208'
         NAMESPACE = 'mariefm'
     }
 
     stages {
         stage('Check Jenkins Workspace') {
+            when {
+                anyOf {
+                    branch "main"
+                    branch "mariefm"
+                    changeRequest()
+                }
+            }
             steps {
                 sh "chmod +x -R ${env.WORKSPACE}"
                 // sh 'sudo groupadd docker'
@@ -25,6 +32,7 @@ pipeline {
         }
         
         stage('Build Docker Images') {
+            when { changeset "**/Dockerfile" }
             parallel {
                 stage('Front End') {
                     steps {
@@ -60,6 +68,7 @@ pipeline {
         }
         
         stage('Test Docker Images') {
+            when { changeset "**/Dockerfile" }
             steps {
                 sh 'docker run -d --rm --name frontend -p 8081:80 $registryFrontEnd'
                 sh 'docker run -d --rm --name backend -p 2000:2000 $registryBackEnd'
@@ -69,12 +78,19 @@ pipeline {
         }
 
         stage('Clean Up Docker Test') {
+            when { changeset "**/Dockerfile" }
             steps {
                 sh 'docker stop frontend || true && docker stop backend || true && docker stop database || true'
             }
         }
 
         stage('Push Docker Images to Registry') {
+            when { 
+                allOf {
+                    branch "main"
+                    changeset "**/Dockerfile"
+                }
+            }
             parallel {
                 stage('Front End') {
                     steps {
@@ -107,12 +123,23 @@ pipeline {
         }        
 
         stage('Clean Up Images') {
+            when { 
+                allOf {
+                    branch "main"
+                    changeset "**/Dockerfile"
+                }
+            }
             steps {
                 sh 'docker rmi $registryFrontEnd && docker rmi $registryBackEnd && docker rmi $registryDatabase'
             }
         }
         
         stage('Terraform Init & Plan') {
+            when {
+                anyOf {
+                    changeset "**/*.tf"
+                }
+            }
             steps {
                 script {
                     dir('./terraform') {
@@ -124,7 +151,7 @@ pipeline {
                         '''
                     }                        
                 }
-                // input message: "Continue to Terraform Apply?"               
+                input message: "Continue to Terraform Apply?"               
             }
         }
 
@@ -139,6 +166,12 @@ pipeline {
         // }
 
         stage('Terraform Apply') {
+            when { 
+                allOf {
+                    branch "main"
+                    changeset "**/*.tf"
+                }
+            }
             steps {
                 script {
                     dir('./terraform') {
@@ -170,6 +203,12 @@ pipeline {
         }
 
         stage('Apply Kubernetes File') {
+            when {
+                allOf {
+                    branch "main"
+                    changeset "kubernetes/*.yaml"
+                }
+            }
             steps {
                 withCredentials([file(credentialsId: KEY_FILE, variable: 'GC_KEY')]) {
                     //authentication
